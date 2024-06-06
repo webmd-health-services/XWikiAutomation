@@ -1,0 +1,8 @@
+TOPIC
+    about_XWikiAutomation
+
+SHORT DESCRIPTION
+    XWikiAutomation is a PowerShell module for...
+
+LONG DESCRIPTION
+    The XWikiAutomation PowerShell module...
