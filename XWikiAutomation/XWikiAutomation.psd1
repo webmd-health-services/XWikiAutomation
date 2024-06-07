@@ -36,7 +36,7 @@
     Copyright = '(c) WebMD Health Services.'
 
     # Description of the functionality provided by this module
-    Description = ''
+    Description = 'A PowerShell module for automating XWiki.'
 
     # Minimum version of the Windows PowerShell engine required by this module
     PowerShellVersion = '5.1'
@@ -113,7 +113,7 @@
             # A URL to an icon representing this module.
             # IconUri = ''
 
-            Prerelease = ''
+            Prerelease = 'rc1'
 
             # ReleaseNotes of this module
             ReleaseNotes = 'https://github.com/webmd-health-services/XWikiAutomation/blob/main/CHANGELOG.md'
