@@ -76,6 +76,7 @@
 
     # Functions to export from this module. Only list public function here.
     FunctionsToExport = @(
+        'New-XWSession'
     )
 
     # Cmdlets to export from this module. By default, you get a script module, so there are no cmdlets.
@@ -113,7 +114,7 @@
             # A URL to an icon representing this module.
             # IconUri = ''
 
-            Prerelease = 'rc1'
+            Prerelease = ''
 
             # ReleaseNotes of this module
             ReleaseNotes = 'https://github.com/webmd-health-services/XWikiAutomation/blob/main/CHANGELOG.md'
