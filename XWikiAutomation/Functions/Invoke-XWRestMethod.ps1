@@ -37,7 +37,7 @@ function Invoke-XWRestMethod
         [Microsoft.PowerShell.Commands.WebRequestMethod] $Method =
             [Microsoft.PowerShell.Commands.WebRequestMethod]::Get,
 
-        # Sets the content to be returned as JSON rather than returned as XML
+        # Sets the content to be returned as JSON rather than returned as XML.
         [switch] $AsJson,
 
         [Parameter(Mandatory, ParameterSetName='Body')]
@@ -49,10 +49,7 @@ function Invoke-XWRestMethod
         [switch] $PassThru
     )
 
-    Set-StrictMode -Version 'Latest'
-    Use-CallerPreference -Cmdlet $PSCmdlet -SessionState $ExecutionContext.SessionState
-
-    $url = "$($Session.Url)rest/${name}"
+    $url = [uri]::EscapeDataString("$($Session.Url)rest/${name}")
 
     if ($AsJson)
     {
@@ -71,8 +68,7 @@ function Invoke-XWRestMethod
     {
         if ($Method -eq [Microsoft.PowerShell.Commands.WebRequestMethod]::Get -or $PSCmdlet.ShouldProcess($url, $method))
         {
-            $response =
-                Invoke-RestMethod -Method $Method -Uri $url @requestParams |
+            Invoke-RestMethod -Method $Method -Uri $url @requestParams |
                 ForEach-Object { $_ } |
                 Where-Object { $_ }
         }

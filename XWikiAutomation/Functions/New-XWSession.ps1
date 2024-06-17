@@ -17,15 +17,21 @@ function New-XWSession
     BuildMasterAutomation module functions to communicate with XWiki at `https://xwiki.com` with the
     credential in `$credential`.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName='ByCredential')]
     param(
         # The URL to the XWiki instance to use.
         [Parameter(Mandatory)]
         [Uri] $Url,
 
         # The API key to use when making requests to XWiki
-        [Parameter(Mandatory)]
-        [pscredential] $Credential
+        [Parameter(Mandatory, ParameterSetName='ByCredential')]
+        [pscredential] $Credential,
+
+        [Parameter(Mandatory, ParameterSetName='ByUsername')]
+        [String] $Username,
+
+        [Parameter(Mandatory, ParameterSetName='ByUsername')]
+        [securestring] $Password
     )
 
     Set-StrictMode -Version 'Latest'
