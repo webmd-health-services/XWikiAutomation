@@ -76,8 +76,9 @@
 
     # Functions to export from this module. Only list public function here.
     FunctionsToExport = @(
-        'New-XWSession',
-        'Invoke-XWRestMethod'
+        'Get-XWPage'
+        'Invoke-XWRestMethod',
+        'New-XWSession'
     )
 
     # Cmdlets to export from this module. By default, you get a script module, so there are no cmdlets.
