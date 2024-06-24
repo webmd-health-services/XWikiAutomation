@@ -37,6 +37,11 @@ function New-XWSession
     Set-StrictMode -Version 'Latest'
     Use-CallerPreference -Cmdlet $PSCmdlet -SessionState $ExecutionContext.SessionState
 
+    if ($PSCmdlet.ParameterSetName -eq 'ByUsername')
+    {
+        $Credential = [pscredential]::new($Username, $Password)
+    }
+
     return [pscustomobject]@{
         Url = $Url;
         Credential = $Credential;
