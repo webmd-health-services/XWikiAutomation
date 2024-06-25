@@ -161,7 +161,7 @@ BeforeAll {
 Describe 'Get-XWPage' {
     BeforeEach {
         MockRestMethod
-        $script:session = New-TestXWSession
+        $script:session = $xwTestSession
         $script:spacePath = $null
         $script:wikiName = $null
         $script:pageName = $null

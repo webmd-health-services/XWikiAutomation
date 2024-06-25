@@ -51,7 +51,7 @@ BeforeAll {
 
 Describe 'Invoke-XWRestMethod' {
     BeforeEach {
-        $script:session = New-TestXWSession
+        $script:session = $xwTestSession
     }
 
     It 'should always make GET requests' {

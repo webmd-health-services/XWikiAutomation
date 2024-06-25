@@ -42,6 +42,11 @@ function New-XWSession
         $Credential = [pscredential]::new($Username, $Password)
     }
 
+    if (-not $Url.AbsolutePath.EndsWith('/'))
+    {
+        $Url = [uri]::new($Url, '/')
+    }
+
     return [pscustomobject]@{
         Url = $Url;
         Credential = $Credential;
