@@ -51,7 +51,10 @@ function Get-XWPage
         $path = "${path}/${Name}"
     }
 
-    Invoke-XWRestMethod -Session $Session -Name $path -AsJson |
-        Select-Object -ExpandProperty 'pageSummaries' |
-        Select-Object -ExcludeProperty 'links'
+    $res = Invoke-XWRestMethod -Session $Session -Name $path -AsJson
+    if (-not $Name)
+    {
+        $res = $res | Select-Object -ExpandProperty 'pageSummaries'
+    }
+    $res | Select-Object -ExcludeProperty 'links'
 }

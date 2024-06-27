@@ -46,10 +46,13 @@ function Invoke-XWRestMethod
         [Parameter(ParameterSetName='Body')]
         [String] $ContentType = 'application/xml',
 
+        [Parameter(ParameterSetName='Form')]
+        [hashtable] $Form,
+
         [switch] $PassThru
     )
 
-    $url = [uri]::EscapeDataString("$($Session.Url)rest/${name}")
+    $url = [uri]::EscapeUriString("$($Session.Url)rest/${name}")
 
     if ($AsJson)
     {
@@ -64,11 +67,46 @@ function Invoke-XWRestMethod
         $requestParams['ContentType'] = $ContentType
     }
 
+    if ($Form)
+    {
+        $requestParams['Body'] = $Form
+        $requestParams['ContentType'] = 'application/x-www-form-urlencoded'
+    }
+
+    if ($Session.Url -like 'http://*')
+    {
+        $requestParams['AllowUnencryptedAuthentication'] = $true
+    }
+
+    Write-Debug $url
+    foreach ($key in $requestParams.Keys)
+    {
+        if ($key -ne 'Form')
+        {
+            Write-Debug "${key}: $($requestParams[$key])"
+        }
+        else
+        {
+            foreach ($formKey in $requestParams[$key].Keys)
+            {
+                Write-Debug "    ${formKey}: $($requestParams[$key][$formKey])"
+            }
+        }
+    }
+
+    $auth = "$($Session.Credential.UserName):$($Session.Credential.GetNetworkCredential().Password)"
+    $bytes = [Text.Encoding]::ASCII.GetBytes($auth)
+    $base64AuthInfo = [Convert]::ToBase64String($bytes)
+
+    $headers = @{
+        Authorization="Basic $base64AuthInfo"
+    }
+
     try
     {
         if ($Method -eq [Microsoft.PowerShell.Commands.WebRequestMethod]::Get -or $PSCmdlet.ShouldProcess($url, $method))
         {
-            Invoke-RestMethod -Method $Method -Uri $url @requestParams |
+            Invoke-RestMethod -Headers $headers -Method $Method -Uri $url @requestParams |
                 ForEach-Object { $_ } |
                 Where-Object { $_ }
         }

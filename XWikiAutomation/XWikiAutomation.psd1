@@ -78,7 +78,8 @@
     FunctionsToExport = @(
         'Get-XWPage'
         'Invoke-XWRestMethod',
-        'New-XWSession'
+        'New-XWSession',
+        'Set-XWPage'
     )
 
     # Cmdlets to export from this module. By default, you get a script module, so there are no cmdlets.
@@ -116,7 +117,7 @@
             # A URL to an icon representing this module.
             # IconUri = ''
 
-            Prerelease = 'rc1'
+            Prerelease = ''
 
             # ReleaseNotes of this module
             ReleaseNotes = 'https://github.com/webmd-health-services/XWikiAutomation/blob/main/CHANGELOG.md'
