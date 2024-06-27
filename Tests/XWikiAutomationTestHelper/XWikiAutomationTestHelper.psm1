@@ -11,6 +11,10 @@ function New-TestXWSession
     Write-Information "Reading credentials from $credentialsPath."
     $credentials = Get-Content -Path $credentialsPath -Raw | ConvertFrom-Json
     $url = 'https://www.xwikiplayground.org/xwiki/'
+    if ($credentials.url)
+    {
+        $url = $credentials.url
+    }
     $password = $credentials.password | ConvertTo-SecureString -AsPlainText -Force
     $cred = [pscredential]::new($credentials.username, $password)
     return New-XWSession -Url $url -Credential $cred
