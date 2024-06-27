@@ -54,7 +54,9 @@ function New-TestXWSession
 }
 
 $xwTestSession = New-TestXWSession
+$xwTestPage = 'WHSDevOpsTesting'
+$xwTestSpace = 'Sandbox', $xwTestPage
 
-Set-XWPage -Session $xwTestSession -SpacePath 'Sandbox' -Name 'WHSDevOpsTesting' -Hidden $true -Content 'This is a test page.'
+Set-XWPage -Session $xwTestSession -SpacePath 'Sandbox' -Name 'WHSDevOpsTesting' -Hidden $false -Content 'This is a test page.'
 
-Export-ModuleMember -Variable 'xwTestSession' -Function '*'
+Export-ModuleMember -Variable '*' -Function '*'

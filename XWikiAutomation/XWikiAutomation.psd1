@@ -79,6 +79,7 @@
         'Get-XWPage'
         'Invoke-XWRestMethod',
         'New-XWSession',
+        'Remove-XWPage',
         'Set-XWPage'
     )
 
