@@ -11,15 +11,17 @@ function New-TestXWSession
     Write-Information "Reading credentials from $credentialsPath."
     $credentials = Get-Content -Path $credentialsPath -Raw | ConvertFrom-Json
     $url = 'https://www.xwikiplayground.org/xwiki/'
-    if ($credentials.url)
+    if ($credentials.PSObject.Properties.name -match 'url')
     {
         $url = $credentials.url
-    }
-    $password = $credentials.password | ConvertTo-SecureString -AsPlainText -Force
-    $cred = [pscredential]::new($credentials.username, $password)
-    return New-XWSession -Url $url -Credential $cred
 
-    $result = Invoke-WebRequest 'https://www.xwikiplayground.org/xwiki/bin/register/XWiki/XWikiRegister'
+        if (-not $url.EndsWith('/'))
+        {
+            $url = "${url}/"
+        }
+    }
+
+    $result = Invoke-WebRequest "${url}bin/register/XWiki/XWikiRegister"
     if (-not ($result.Content -match 'name="form_token" value="(?<formToken>.*)"'))
     {
         Write-Error 'Could not find form_token in the response.'
@@ -38,12 +40,21 @@ function New-TestXWSession
         form_token = $Matches.formToken
     }
 
-    Invoke-WebRequest -Uri 'https://www.xwikiplayground.org/xwiki/bin/register/XWiki/XWikiRegister' `
+    Write-Host $credentials.username
+    Write-Host $credentials.password
+
+    Invoke-WebRequest -Uri "${url}bin/register/XWiki/XWikiRegister" `
                       -Method Post `
                       -Body $formData `
                       -ContentType 'application/x-www-form-urlencoded' | Out-Null
+
+    $password = $credentials.password | ConvertTo-SecureString -AsPlainText -Force
+    $cred = [pscredential]::new($credentials.username, $password)
+    return New-XWSession -Url $url -Credential $cred
 }
 
 $xwTestSession = New-TestXWSession
+
+Set-XWPage -Session $xwTestSession -SpacePath 'Sandbox' -Name 'WHSDevOpsTesting' -Hidden $true -Content 'This is a test page.'
 
 Export-ModuleMember -Variable 'xwTestSession' -Function '*'
