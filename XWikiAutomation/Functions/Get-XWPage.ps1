@@ -44,6 +44,8 @@ function Get-XWPage
         [String] $WikiName = 'xwiki'
     )
 
+    Set-StrictMode -Version 'Latest'
+    Use-CallerPreference -Cmdlet $PSCmdlet -SessionState $ExecutionContext.SessionState
     $path = "wikis/${WikiName}/spaces/$($SpacePath -join '/spaces/')/pages"
 
     if ($Name)

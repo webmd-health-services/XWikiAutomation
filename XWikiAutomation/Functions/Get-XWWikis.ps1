@@ -20,6 +20,9 @@ function Get-XWWikis
         [pscustomobject] $Session
     )
 
+    Set-StrictMode -Version 'Latest'
+    Use-CallerPreference -Cmdlet $PSCmdlet -SessionState $ExecutionContext.SessionState
+
     Invoke-XWRestMethod -Session $Session -Name 'wikis' -AsJson |
         Select-Object -ExpandProperty 'wikis' |
         Write-Output

@@ -52,8 +52,10 @@ function Invoke-XWRestMethod
         [switch] $PassThru
     )
 
-    $url = [uri]::EscapeUriString("$($Session.Url)rest/${name}")
+    Set-StrictMode -Version 'Latest'
+    Use-CallerPreference -Cmdlet $PSCmdlet -SessionState $ExecutionContext.SessionState
 
+    $url = [uri]::EscapeUriString("$($Session.Url)rest/${name}")
     if ($AsJson)
     {
         $url = "${url}?media=json"
@@ -73,12 +75,7 @@ function Invoke-XWRestMethod
         $requestParams['ContentType'] = 'application/x-www-form-urlencoded'
     }
 
-    if ($Session.Url -like 'http://*')
-    {
-        $requestParams['AllowUnencryptedAuthentication'] = $true
-    }
-
-    Write-Debug $url
+    Write-Debug "${method} - ${url}"
     foreach ($key in $requestParams.Keys)
     {
         if ($key -ne 'Form')
@@ -102,11 +99,13 @@ function Invoke-XWRestMethod
         Authorization="Basic $base64AuthInfo"
     }
 
+    $statusCode = $null
+
     try
     {
         if ($Method -eq [Microsoft.PowerShell.Commands.WebRequestMethod]::Get -or $PSCmdlet.ShouldProcess($url, $method))
         {
-            Invoke-RestMethod -Headers $headers -Method $Method -Uri $url @requestParams |
+            Invoke-RestMethod -Headers $headers -Method $Method -Uri $url @requestParams -StatusCodeVariable 'statusCode' |
                 ForEach-Object { $_ } |
                 Where-Object { $_ }
         }
@@ -114,6 +113,10 @@ function Invoke-XWRestMethod
     catch
     {
         $Global:Error.RemoveAt(0)
-        Write-Error -ErrorRecord $_ -ErrorAction $ErrorActionPreference
+        if ($statusCode -eq 401)
+        {
+            Write-Error -ErrorRecord 'Unauthorized. Please check your credentials.' -ErrorAction $ErrorActionPreference
+        }
+        # Write-Error -ErrorRecord $_ -ErrorAction $ErrorActionPreference
     }
 }

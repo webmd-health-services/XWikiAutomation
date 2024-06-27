@@ -32,7 +32,8 @@ function Set-XWPage
     Demonstrates creating or editing a page named 'HomePage' in the space 'Main' with the parent page 'ParentPage'. If
     the page already exists, it will be moved to be a child of 'ParentPage'.
     #>
-    [CmdletBinding(DefaultParameterSetName='ByAttribute')]
+    [Diagnostics.CodeAnalysis.SuppressMessage('PSShouldProcess', '')]
+    [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName='ByAttribute')]
     param (
         # The Session object for an XWiki session. Create a new Session using `New-XWSession`.
         [Parameter(Mandatory)]
@@ -69,6 +70,9 @@ function Set-XWPage
         # The name of the wiki the page belongs to. Defaults to xwiki.
         [String] $WikiName = 'xwiki'
     )
+
+    Set-StrictMode -Version 'Latest'
+    Use-CallerPreference -Cmdlet $PSCmdlet -SessionState $ExecutionContext.SessionState
 
     $path = "wikis/${WikiName}/spaces/$($SpacePath -join '/spaces/')/pages/${Name}"
 
