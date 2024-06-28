@@ -20,6 +20,10 @@ function New-TestXWSession
             $url = "${url}/"
         }
     }
+    else
+    {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    }
 
     $result = Invoke-WebRequest "${url}bin/register/XWiki/XWikiRegister"
     if (-not ($result.Content -match 'name="form_token" value="(?<formToken>.*)"'))
