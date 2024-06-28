@@ -72,7 +72,6 @@ Describe 'Get-XWPage' {
         GivenSpacePath -SpacePath $xwTestSpace
         WhenInvokingRestMethod
         ThenHasPages -Count 2
-        RemovePage -Name 'Get-XWPageTest', 'Get-XWPageTest2'
     }
 
     It 'should handle singular space paths' {
