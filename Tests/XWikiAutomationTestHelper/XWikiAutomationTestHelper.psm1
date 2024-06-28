@@ -20,10 +20,6 @@ function New-TestXWSession
             $url = "${url}/"
         }
     }
-    else
-    {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    }
 
     try
     {
@@ -87,6 +83,11 @@ function RemovePage
     )
 
     $Name | ForEach-Object { Remove-XWPage -Session $xwTestSession -SpacePath $SpacePath -Name $_ }
+}
+
+if ($PSVersionTable.PSVersion.Major -lt 7)
+{
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 }
 
 $xwTestSession = New-TestXWSession
