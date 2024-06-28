@@ -47,7 +47,7 @@ function Get-XWPage
     Set-StrictMode -Version 'Latest'
     Use-CallerPreference -Cmdlet $PSCmdlet -SessionState $ExecutionContext.SessionState
     $path = "wikis/${WikiName}/spaces/$($SpacePath -join '/spaces/')/pages"
-
+    Write-Debug $path
     if ($Name)
     {
         $path = "${path}/${Name}"
@@ -58,5 +58,5 @@ function Get-XWPage
     {
         $res = $res | Select-Object -ExpandProperty 'pageSummaries'
     }
-    $res | Select-Object -ExcludeProperty 'links'
+    return $res | Select-Object -ExcludeProperty 'links'
 }

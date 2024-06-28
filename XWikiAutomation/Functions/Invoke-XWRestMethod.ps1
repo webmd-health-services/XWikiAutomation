@@ -105,18 +105,14 @@ function Invoke-XWRestMethod
     {
         if ($Method -eq [Microsoft.PowerShell.Commands.WebRequestMethod]::Get -or $PSCmdlet.ShouldProcess($url, $method))
         {
-            Invoke-RestMethod -Headers $headers -Method $Method -Uri $url @requestParams -StatusCodeVariable 'statusCode' |
+            Invoke-RestMethod -Headers $headers -Method $Method -Uri $url @requestParams|
                 ForEach-Object { $_ } |
-                Where-Object { $_ }
+                Where-Object { $_ } |
+                Write-Output
         }
     }
     catch
     {
         $Global:Error.RemoveAt(0)
-        if ($statusCode -eq 401)
-        {
-            Write-Error -ErrorRecord 'Unauthorized. Please check your credentials.' -ErrorAction $ErrorActionPreference
-        }
-        # Write-Error -ErrorRecord $_ -ErrorAction $ErrorActionPreference
     }
 }
