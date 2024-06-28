@@ -25,36 +25,38 @@ function New-TestXWSession
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     }
 
-    $result = Invoke-WebRequest "${url}bin/register/XWiki/XWikiRegister"
-    if (-not ($result.Content -match 'name="form_token" value="(?<formToken>.*)"'))
+    try
     {
-        Write-Error 'Could not find form_token in the response.'
-        return
+        $result = Invoke-WebRequest "${url}bin/register/XWiki/XWikiRegister"
+        if (-not ($result.Content -match 'name="form_token" value="(?<formToken>.*)"'))
+        {
+            Write-Error 'Could not find form_token in the response.'
+            return
+        }
+
+        $formData = @{
+            parent = 'xwiki:Main.UserDirectory'
+            register_first_name = ''
+            register_last_name = ''
+            xwikiname = $credentials.username
+            register_password = $credentials.password
+            register2_password = $credentials.password
+            register_email = ''
+            xredirect = ''
+            form_token = $Matches.formToken
+        }
+
+        Invoke-WebRequest -Uri "${url}bin/register/XWiki/XWikiRegister" `
+                        -Method Post `
+                        -Body $formData `
+                        -ContentType 'application/x-www-form-urlencoded' | Out-Null
     }
-
-    $formData = @{
-        parent = 'xwiki:Main.UserDirectory'
-        register_first_name = ''
-        register_last_name = ''
-        xwikiname = $credentials.username
-        register_password = $credentials.password
-        register2_password = $credentials.password
-        register_email = ''
-        xredirect = ''
-        form_token = $Matches.formToken
+    finally
+    {
+        $password = $credentials.password | ConvertTo-SecureString -AsPlainText -Force
+        $cred = [pscredential]::new($credentials.username, $password)
+        New-XWSession -Url $url -Credential $cred | Write-Output
     }
-
-    Write-Host $credentials.username
-    Write-Host $credentials.password
-
-    Invoke-WebRequest -Uri "${url}bin/register/XWiki/XWikiRegister" `
-                      -Method Post `
-                      -Body $formData `
-                      -ContentType 'application/x-www-form-urlencoded' | Out-Null
-
-    $password = $credentials.password | ConvertTo-SecureString -AsPlainText -Force
-    $cred = [pscredential]::new($credentials.username, $password)
-    return New-XWSession -Url $url -Credential $cred
 }
 
 function GivenPage
@@ -91,6 +93,6 @@ $xwTestSession = New-TestXWSession
 $xwTestPage = 'WHSDevOpsTesting'
 $xwTestSpace = 'Sandbox', $xwTestPage
 
-Set-XWPage -Session $xwTestSession -SpacePath 'Sandbox' -Name 'WHSDevOpsTesting' -Hidden $false -Content 'This is a test page.'
+Set-XWPage -Session $xwTestSession -SpacePath 'Sandbox' -Name 'WHSDevOpsTesting' -Hidden $true -Content 'This is a test page.'
 
 Export-ModuleMember -Variable '*' -Function '*'
