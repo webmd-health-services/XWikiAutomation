@@ -56,36 +56,6 @@ BeforeAll {
 
         $script:result | Should -HaveCount $Count
     }
-
-    function GivenPage
-    {
-        [CmdletBinding()]
-        param(
-            [String[]] $Name,
-            [String] $Title,
-            [String] $Content = 'This is a test page.',
-            [String[]] $SpacePath = $xwTestSpace
-        )
-
-        $Name | ForEach-Object {
-            if (-not $Title)
-            {
-                $Title = $_
-            }
-            Set-XWPage -Session $xwTestSession -SpacePath $SpacePath -Name $_ -Title $Title -Content $Content
-        }
-    }
-
-    function RemovePage
-    {
-        [CmdletBinding()]
-        param(
-            [String[]] $Name,
-            [String[]] $SpacePath = $xwTestSpace
-        )
-
-        $Name | ForEach-Object { Remove-XWPage -Session $xwTestSession -SpacePath $SpacePath -Name $_ }
-    }
 }
 
 Describe 'Get-XWPage' {
