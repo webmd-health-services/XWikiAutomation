@@ -55,10 +55,11 @@ for:
             username = $env:XWIKI_USERNAME
             password = $env:XWIKI_PASSWORD
         } | ConvertTo-Json | Out-File -FilePath 'credentials.json'
-
-
         $ProgressPreference = 'SilentlyContinue'
         iwr https://raw.githubusercontent.com/webmd-health-services/Prism/main/Scripts/init.ps1 | iex | Format-Table
+        Import-Module tls
+        Get-TlsCipherSuite | ft -auto
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12
         .\build.ps1
 
 # Build in PowerShell
@@ -73,5 +74,7 @@ for:
         } | ConvertTo-Json | Out-File -FilePath 'credentials.json'
         $ProgressPreference = 'SilentlyContinue'
         iwr https://raw.githubusercontent.com/webmd-health-services/Prism/main/Scripts/init.ps1 | iex | Format-Table
-
+        Import-Module tls
+        Get-TlsCipherSuite | ft -auto
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12
         ./build.ps1

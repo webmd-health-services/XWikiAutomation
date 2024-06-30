@@ -1,3 +1,5 @@
+
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12
 function New-TestXWSession
 {
     [CmdletBinding()]
@@ -21,9 +23,6 @@ function New-TestXWSession
         }
     }
 
-    [System.Net.ServicePointManager]::SecurityProtocol =
-        [System.Net.ServicePointManager]::SecurityProtocol -bor
-        [System.Net.SecurityProtocolType]::Tls12
 
     try
     {
