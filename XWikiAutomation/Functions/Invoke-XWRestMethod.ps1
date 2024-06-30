@@ -40,16 +40,17 @@ function Invoke-XWRestMethod
         # Sets the content to be returned as JSON rather than returned as XML.
         [switch] $AsJson,
 
+        # The body of the request. This is used for POST and PUT requests.
         [Parameter(Mandatory, ParameterSetName='Body')]
         [Object] $Body,
 
+        # The content type of the body. Defaults to `application/xml`.
         [Parameter(ParameterSetName='Body')]
         [String] $ContentType = 'application/xml',
 
+        # The form data to send with the request. This is used for POST and PUT requests.
         [Parameter(ParameterSetName='Form')]
-        [hashtable] $Form,
-
-        [switch] $PassThru
+        [hashtable] $Form
     )
 
     Set-StrictMode -Version 'Latest'
@@ -105,7 +106,7 @@ function Invoke-XWRestMethod
     {
         if ($Method -eq [Microsoft.PowerShell.Commands.WebRequestMethod]::Get -or $PSCmdlet.ShouldProcess($url, $method))
         {
-            Invoke-RestMethod -Headers $headers -Method $Method -Uri $url @requestParams|
+            Invoke-RestMethod -Headers $headers -Method $Method -Uri $url @requestParams -UseBasicParsing |
                 ForEach-Object { $_ } |
                 Where-Object { $_ } |
                 Write-Output

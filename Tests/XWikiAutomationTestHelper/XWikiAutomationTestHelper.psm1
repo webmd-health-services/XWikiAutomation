@@ -21,9 +21,13 @@ function New-TestXWSession
         }
     }
 
+    [System.Net.ServicePointManager]::SecurityProtocol =
+        [System.Net.ServicePointManager]::SecurityProtocol -bor
+        [System.Net.SecurityProtocolType]::Tls12
+
     try
     {
-        $result = Invoke-WebRequest "${url}bin/register/XWiki/XWikiRegister"
+        $result = Invoke-WebRequest -Uri "${url}bin/register/XWiki/XWikiRegister" -UseBasicParsing
         if (-not ($result.Content -match 'name="form_token" value="(?<formToken>.*)"'))
         {
             Write-Error 'Could not find form_token in the response.'
@@ -43,9 +47,15 @@ function New-TestXWSession
         }
 
         Invoke-WebRequest -Uri "${url}bin/register/XWiki/XWikiRegister" `
-                        -Method Post `
-                        -Body $formData `
-                        -ContentType 'application/x-www-form-urlencoded' | Out-Null
+                          -UseBasicParsing `
+                          -Method Post `
+                          -Body $formData `
+                          -ContentType 'application/x-www-form-urlencoded' | Out-Null
+    }
+    catch
+    {
+        Write-Error $_.Exception.Message
+        return
     }
     finally
     {
@@ -83,11 +93,6 @@ function RemovePage
     )
 
     $Name | ForEach-Object { Remove-XWPage -Session $xwTestSession -SpacePath $SpacePath -Name $_ }
-}
-
-if ($PSVersionTable.PSVersion.Major -lt 7)
-{
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 }
 
 $xwTestSession = New-TestXWSession
