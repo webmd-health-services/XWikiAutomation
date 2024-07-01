@@ -100,7 +100,10 @@ function Invoke-XWRestMethod
         Authorization="Basic $base64AuthInfo"
     }
 
-    $statusCode = $null
+    if ($Session.Url.ToString().Contains('xwikiplayground'))
+    {
+        $requestParams['SkipCertificateCheck'] = $true
+    }
 
     try
     {
