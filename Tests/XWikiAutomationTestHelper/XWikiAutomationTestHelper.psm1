@@ -1,5 +1,5 @@
 
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12
+Set-StrictMode -Version 'Latest'
 function New-TestXWSession
 {
     [CmdletBinding()]
@@ -64,6 +64,10 @@ function New-TestXWSession
     }
 }
 
+$xwTestSession = New-TestXWSession
+$xwTestPage = 'WHSDevOpsTesting'
+$xwTestSpace = 'Sandbox', $xwTestPage
+
 function GivenPage
 {
     [CmdletBinding()]
@@ -74,6 +78,7 @@ function GivenPage
         [String[]] $SpacePath = $xwTestSpace
     )
 
+    Set-StrictMode -Version 'Latest'
     $Name | ForEach-Object {
         if (-not $Title)
         {
@@ -91,12 +96,9 @@ function RemovePage
         [String[]] $SpacePath = $xwTestSpace
     )
 
+    Set-StrictMode -Version 'Latest'
     $Name | ForEach-Object { Remove-XWPage -Session $xwTestSession -SpacePath $SpacePath -Name $_ }
 }
-
-$xwTestSession = New-TestXWSession
-$xwTestPage = 'WHSDevOpsTesting'
-$xwTestSpace = 'Sandbox', $xwTestPage
 
 Set-XWPage -Session $xwTestSession -SpacePath 'Sandbox' -Name 'WHSDevOpsTesting' -Hidden $true -Content 'This is a test page.'
 
