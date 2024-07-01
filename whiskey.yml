@@ -49,6 +49,7 @@ Build:
     Path:
     - XWikiAutomation
     Exclude:
+    - "credentials.json"
     - "*.pdb"
     - "*.orig"
 
