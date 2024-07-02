@@ -5,8 +5,8 @@ The "XWikiAutomation" module is a PowerShell module for automating
 
 # System Requirements
 
-* Windows PowerShell 5.1 and .NET 4.6.1+
-* PowerShell Core 6+
+* Windows PowerShell 5.1 and .NET 4.8+
+* PowerShell Core 7+
 * XWiki 15.10.10 (most functions should work on older/newer versions)
 
 # Installing
@@ -34,4 +34,5 @@ Import-Module -Name '.\XWikiAutomation'
 ## Functions That Call XWiki APIs
 
 * Get-XWPage
+* Set-XWPage
 * Invoke-XWRestMethod
