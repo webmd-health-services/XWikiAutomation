@@ -102,7 +102,6 @@ function Invoke-XWRestMethod
 
     if ($Session.Url.ToString().Contains('xwikiplayground'))
     {
-        $requestParams['SkipCertificateCheck'] = $true
     }
 
     try

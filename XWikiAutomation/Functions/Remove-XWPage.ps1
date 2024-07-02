@@ -22,15 +22,19 @@ function Remove-XWPage
     [Diagnostics.CodeAnalysis.SuppressMessage('PSShouldProcess', '')]
     [CmdletBinding(SupportsShouldProcess)]
     param(
+        # The Session object for an XWiki session. Create a new Session using `New-XWSession`.
         [Parameter(Mandatory)]
         [Object] $Session,
 
+        # The space path to get to the page.
         [Parameter(Mandatory)]
         [String[]] $SpacePath,
 
+        # The name of the page.
         [Parameter(Mandatory)]
         [String] $Name,
 
+        # The name of the wiki the page belongs to. Defaults to xwiki.
         [String] $WikiName = 'xwiki'
     )
 

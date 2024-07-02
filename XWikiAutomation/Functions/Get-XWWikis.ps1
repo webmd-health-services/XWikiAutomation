@@ -16,6 +16,7 @@ function Get-XWWikis
     #>
     [CmdletBinding()]
     param(
+        # The Session object for an XWiki session. Create a new Session using `New-XWSession`.
         [Parameter(Mandatory)]
         [pscustomobject] $Session
     )

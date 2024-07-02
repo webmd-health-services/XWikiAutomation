@@ -23,7 +23,7 @@ function New-XWSession
         [Parameter(Mandatory)]
         [Uri] $Url,
 
-        # The API key to use when making requests to XWiki
+        # The username and password to use when making requests to XWiki.
         [Parameter(Mandatory)]
         [pscredential] $Credential
     )
