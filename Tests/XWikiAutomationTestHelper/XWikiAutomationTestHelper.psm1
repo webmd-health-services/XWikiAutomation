@@ -67,6 +67,21 @@ function New-TestXWSession
 $xwTestSession = New-TestXWSession
 $xwTestPage = 'WHSDevOpsTesting'
 $xwTestSpace = 'Sandbox', $xwTestPage
+$xwTestGeneratedPages = [System.Collections.ArrayList]::new()
+
+function GenerateRandomString
+{
+    [CmdletBinding()]
+    param(
+        [String] $Prefix,
+        [int] $Length = 4
+    )
+
+    Set-StrictMode -Version 'Latest'
+    $alphabet = 'abcdefghijklmnopqrstuvwxyz'.ToCharArray()
+    $random = $alphabet | Get-Random -Count $Length
+    return $Prefix + ($random -join '')
+}
 
 function GivenPage
 {
@@ -80,10 +95,17 @@ function GivenPage
 
     Set-StrictMode -Version 'Latest'
     $Name | ForEach-Object {
+        [void] $xwTestGeneratedPages.Add([pscustomobject]@{
+            Name = $_
+            SpacePath = $SpacePath
+        })
         if (-not $Title)
         {
             $Title = $_
         }
+        $VerbosePreference = 'Continue'
+        Write-Verbose "Creating page $_ in space $($SpacePath -join '/')."
+        $VerbosePreference = 'SilentlyContinue'
         Set-XWPage -Session $xwTestSession -SpacePath $SpacePath -Name $_ -Title $Title -Content $Content
     }
 }
@@ -100,6 +122,36 @@ function RemovePage
     $Name | ForEach-Object { Remove-XWPage -Session $xwTestSession -SpacePath $SpacePath -Name $_ }
 }
 
-Set-XWPage -Session $xwTestSession -SpacePath 'Sandbox' -Name 'WHSDevOpsTesting' -Hidden $true -Content 'This is a test page.'
+function InitTests
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [String] $TestName
+    )
+    Set-StrictMode -Version 'Latest'
+    $xwTestGeneratedPages.Clear()
+    $TestName = GenerateRandomString -Prefix $TestName
+    GivenPage -Name $TestName -SpacePath $xwTestSpace | Out-Null
+    $testSpace = $xwTestSpace + $TestName
+    return $testSpace
+}
+
+function CleanTests
+{
+    foreach($page in $xwTestGeneratedPages)
+    {
+        $VerbosePreference = 'Continue'
+        Write-Verbose "Removing page $($page.Name) from space $($page.SpacePath)."
+        $VerbosePreference = 'SilentlyContinue'
+        RemovePage -Name $page.Name -SpacePath $page.SpacePath
+    }
+}
+
+Set-XWPage -Session $xwTestSession `
+           -SpacePath 'Sandbox' `
+           -Name 'WHSDevOpsTesting' `
+           -Hidden $true `
+           -Content 'This is a test page.'
 
 Export-ModuleMember -Variable '*' -Function '*'

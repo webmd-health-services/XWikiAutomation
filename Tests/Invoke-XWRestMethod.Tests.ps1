@@ -80,5 +80,4 @@ Describe 'Invoke-XWRestMethod' {
         $res | Should -Be 'get-request'
         ThenRestMethodInvoked -ParameterFilter $parameterFilter
     }
-
 }

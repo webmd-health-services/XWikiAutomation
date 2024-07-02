@@ -5,6 +5,9 @@ BeforeAll {
 
     & (Join-Path -Path $PSScriptRoot -ChildPath 'Initialize-Test.ps1' -Resolve)
 
+    $testSpacePath = InitTests -TestName 'Get-XWPage'
+    $script:spacePath = $testSpacePath
+
     function GivenSpacePath
     {
         param(
@@ -36,10 +39,6 @@ BeforeAll {
         {
             $splat['SpacePath'] = $script:spacePath
         }
-        if ($script:wikiName)
-        {
-            $splat['WikiName'] = $script:wikiName
-        }
         if ($script:pageName)
         {
             $splat['Name'] = $script:pageName
@@ -62,14 +61,13 @@ Describe 'Get-XWPage' {
     BeforeEach {
         $script:session = $xwTestSession
         $script:spacePath = $null
-        $script:wikiName = $null
-        $script:pageName = $null
         $script:result = $null
+        $script:pageName = $null
     }
 
     It 'should handle getting data by space path' {
-        GivenPage -Name 'Get-XWPageTest', 'Get-XWPageTest2'
-        GivenSpacePath -SpacePath $xwTestSpace
+        GivenSpacePath $testSpacePath
+        GivenPage -Name 'Get-XWPageTest', 'Get-XWPageTest2' -SpacePath $testSpacePath
         WhenInvokingRestMethod
         ThenHasPages -Count 2
     }
@@ -79,5 +77,9 @@ Describe 'Get-XWPage' {
         GivenPageName -Name $xwTestPage
         WhenInvokingRestMethod
         ThenHasPages -Count 1
+    }
+
+    AfterAll {
+        CleanTests
     }
 }

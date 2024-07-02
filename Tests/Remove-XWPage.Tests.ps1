@@ -6,6 +6,9 @@ BeforeAll {
 
     & (Join-Path -Path $PSScriptRoot -ChildPath 'Initialize-Test.ps1' -Resolve)
 
+    $testSpacePath = InitTests -TestName 'Remove-XWPage'
+    $script:spacePath = $testSpacePath
+
     function GivenPage
     {
         [CmdletBinding()]
@@ -13,7 +16,7 @@ BeforeAll {
             [String] $Name,
             [String] $Title = $Name,
             [String] $Content = 'This is a test page.',
-            [String[]] $SpacePath = $xwTestSpace
+            [String[]] $SpacePath = $script:spacePath
         )
 
         Set-XWPage -Session $xwTestSession -SpacePath $SpacePath -Name $Name -Title $Title -Content $Content
@@ -31,7 +34,7 @@ BeforeAll {
     {
         param(
             [String] $Name,
-            [String[]] $SpacePath = $xwTestSpace
+            [String[]] $SpacePath = $script:spacePath
         )
         Get-XWPage -Session $xwTestSession -SpacePath $SpacePath -Name $Name | Should -Not -BeNullOrEmpty
     }
@@ -47,22 +50,26 @@ BeforeAll {
 
 Describe 'Remove-XWPage' {
     It 'should delete the provided page' {
-        GivenPage -Name 'Remove-XWPageTest'
+        GivenPage -Name 'Remove-XWPageTest' -SpacePath $testSpacePath
         WhenRemovingPage -Name 'Remove-XWPageTest'
         ThenPageDeleted -Name 'Remove-XWPageTest'
     }
 
     It 'should not throw an error if the page does not exist' {
-        GivenPage -Name 'Remove-XWPageTest'
+        GivenPage -Name 'Remove-XWPageTest' -SpacePath $testSpacePath
         WhenRemovingPage -Name 'Remove-XWPageTest'
         WhenRemovingPage -Name 'Remove-XWPageTest'
     }
 
     It 'should not delete child pages' {
-        GivenPage -Name 'Remove-XWPageTest'
-        GivenPage -Name 'Remove-XWSubPage' -SpacePath ($xwTestSpace + 'Remove-XWPageTest')
+        GivenPage -Name 'Remove-XWPageTest' -SpacePath $testSpacePath
+        GivenPage -Name 'Remove-XWSubPage' -SpacePath ($testSpacePath + 'Remove-XWPageTest')
         WhenRemovingPage -Name 'Remove-XWPageTest'
         ThenPageDeleted -Name 'Remove-XWPageTest'
-        ThenPageNotDeleted -Name 'Remove-XWSubPage' -SpacePath ($xwTestSpace + 'Remove-XWPageTest')
+        ThenPageNotDeleted -Name 'Remove-XWSubPage' -SpacePath ($testSpacePath + 'Remove-XWPageTest')
+    }
+
+    AfterAll {
+        CleanTests
     }
 }
