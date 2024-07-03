@@ -76,9 +76,9 @@
 
     # Functions to export from this module. Only list public function here.
     FunctionsToExport = @(
+        'ConvertTo-XWSpacePath'
         'Get-XWAttachment',
         'Get-XWPage',
-        'Get-XWSpace',
         'Get-XWWiki',
         'Invoke-XWRestMethod',
         'New-XWSession',
