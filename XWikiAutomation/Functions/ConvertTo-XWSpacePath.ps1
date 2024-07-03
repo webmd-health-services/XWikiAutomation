@@ -26,7 +26,9 @@ function ConvertTo-XWSpacePath
     Set-StrictMode -Version 'Latest'
     Use-CallerPreference -Cmdlet $PSCmdlet -SessionState $ExecutionContext.SessionState
 
-    $parts = $PageReference -split '(?<!\\)\.'
+    $parts = $PageReference -split '(?<!\\)\.' | ForEach-Object {
+        $_ -replace '\\\.', '.'
+    }
     $pageName = $parts[$parts.Length - 1]
     $spacePath = $parts[0..($parts.Length - 2)]
 
