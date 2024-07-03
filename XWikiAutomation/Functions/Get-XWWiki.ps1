@@ -1,5 +1,5 @@
 
-function Get-XWWikis
+function Get-XWWiki
 {
     <#
     .SYNOPSIS

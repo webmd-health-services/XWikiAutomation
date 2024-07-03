@@ -14,6 +14,12 @@ function Invoke-XWRestMethod
     When trying to update or create data on the XWiki server, it is recommended to use PUT requests rather than POST
     requests. This is due to the way XWiki handles requests.
 
+    To upload a file to the XWiki server, use the `Invoke-XWRestMethod` function with the `InFile` parameter. This will
+    send the file as the body of the request.
+
+    To download a file from the XWiki server, use the `Invoke-XWRestMethod` function with the `OutFile` parameter. This
+    will save the file to the path specified in the `OutFile` parameter.
+
     When using the `WhatIf` parameter, only web requests that use the `Get` HTTP method are made.
 
     .EXAMPLE
@@ -50,7 +56,11 @@ function Invoke-XWRestMethod
 
         # The form data to send with the request. This is used for POST and PUT requests.
         [Parameter(ParameterSetName='Form')]
-        [hashtable] $Form
+        [hashtable] $Form,
+
+        [String] $OutFile,
+
+        [String] $InFile
     )
 
     Set-StrictMode -Version 'Latest'
@@ -68,6 +78,16 @@ function Invoke-XWRestMethod
     {
         $requestParams['Body'] = $Body
         $requestParams['ContentType'] = $ContentType
+    }
+
+    if ($OutFile)
+    {
+        $requestParams['OutFile'] = $OutFile
+    }
+
+    if ($InFile)
+    {
+        $requestParams['InFile'] = $InFile
     }
 
     if ($Form)
