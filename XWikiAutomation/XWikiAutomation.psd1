@@ -18,7 +18,7 @@
     RootModule = 'XWikiAutomation.psm1'
 
     # Version number of this module.
-    ModuleVersion = '0.1.0'
+    ModuleVersion = '0.2.0'
 
     # ID used to uniquely identify this module
     GUID = '5c667095-3f8c-406e-a898-bd266f99f064'
