@@ -67,7 +67,7 @@ function Invoke-XWRestMethod
     Use-CallerPreference -Cmdlet $PSCmdlet -SessionState $ExecutionContext.SessionState
 
     $url = [uri]::EscapeUriString("$($Session.Url)xwiki/rest/${name}")
-    Write-Verbose $url
+
     if ($AsJson)
     {
         $url = "${url}?media=json"
