@@ -9,6 +9,7 @@ Build:
     Prerelease:
     - main: ""
     - "*": rc1
+    IncrementPrereleaseVersion: true
 
 # Update the AppVeyor build/version number.
 - Exec:
@@ -49,6 +50,7 @@ Build:
     Path:
     - XWikiAutomation
     Exclude:
+    - "credentials.json"
     - "*.pdb"
     - "*.orig"
 

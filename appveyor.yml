@@ -20,17 +20,9 @@ environment:
     job_group: pwsh
     appveyor_build_worker_image: macOS
 
-  - job_name: Windows PowerShell 5.1/.NET 4.6.2
-    job_group: ps
-    appveyor_build_worker_image: Visual Studio 2013
-
   - job_name: Windows PowerShell 5.1/.NET 4.8
     job_group: ps
     appveyor_build_worker_image: Visual Studio 2019
-
-  - job_name: PowerShell 6.2 on Windows
-    job_group: pwsh
-    appveyor_build_worker_image: Visual Studio 2015
 
   - job_name: PowerShell 7.2 on Ubuntu
     job_group: pwsh
@@ -44,7 +36,6 @@ environment:
 artifacts:
 - path: .output\*
 
-
 for:
 # Build in Windows PowerShell
 - matrix:
@@ -52,6 +43,10 @@ for:
     - job_group: ps
   build_script:
   - ps: |
+        @{
+            username = $env:XWIKI_USERNAME
+            password = $env:XWIKI_PASSWORD
+        } | ConvertTo-Json | Out-File -FilePath 'credentials.json'
         $ProgressPreference = 'SilentlyContinue'
         iwr https://raw.githubusercontent.com/webmd-health-services/Prism/main/Scripts/init.ps1 | iex | Format-Table
         .\build.ps1
@@ -62,6 +57,10 @@ for:
     - job_group: pwsh
   build_script:
   - pwsh: |
+        @{
+            username = $env:XWIKI_USERNAME
+            password = $env:XWIKI_PASSWORD
+        } | ConvertTo-Json | Out-File -FilePath 'credentials.json'
         $ProgressPreference = 'SilentlyContinue'
         iwr https://raw.githubusercontent.com/webmd-health-services/Prism/main/Scripts/init.ps1 | iex | Format-Table
         ./build.ps1

@@ -13,7 +13,7 @@ Execute this script as the first thing in each of your test fixtures:
 
     #Requires -Version 5.1
     Set-StrictMode -Version 'Latest'
-    
+
     & (Join-Path -Path $PSScriptRoot -ChildPath 'Initialize-Test.ps1' -Resolve)
 #>
 [CmdletBinding()]
@@ -41,6 +41,7 @@ try
             # Don't constantly reload modules on the build server.
             if( (Test-Path -Path 'env:WHS_CI') -and $module.Path.StartsWith($modulePath) )
             {
+                Write-Verbose -Message 'skipping module import'
                 continue
             }
 
