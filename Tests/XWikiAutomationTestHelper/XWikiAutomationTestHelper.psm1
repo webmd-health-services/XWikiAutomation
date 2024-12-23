@@ -12,7 +12,7 @@ function New-TestXWSession
     $credentialsPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\credentials.json' -Resolve
     Write-Information "Reading credentials from $credentialsPath."
     $credentials = Get-Content -Path $credentialsPath -Raw | ConvertFrom-Json
-    $url = 'https://www.xwikiplayground.org/xwiki/'
+    $url = 'https://www.xwikiplayground.org/'
     if ($credentials.PSObject.Properties.name -match 'url')
     {
         $url = $credentials.url
@@ -26,7 +26,7 @@ function New-TestXWSession
 
     try
     {
-        $result = Invoke-WebRequest -Uri "${url}bin/register/XWiki/XWikiRegister" -UseBasicParsing
+        $result = Invoke-WebRequest -Uri "${url}xwiki/bin/register/XWiki/XWikiRegister" -UseBasicParsing
         if (-not ($result.Content -match 'name="form_token" value="(?<formToken>.*)"'))
         {
             Write-Error 'Could not find form_token in the response.'
@@ -45,7 +45,7 @@ function New-TestXWSession
             form_token = $Matches.formToken
         }
 
-        Invoke-WebRequest -Uri "${url}bin/register/XWiki/XWikiRegister" `
+        Invoke-WebRequest -Uri "${url}xwiki/bin/register/XWiki/XWikiRegister" `
                           -UseBasicParsing `
                           -Method Post `
                           -Body $formData `

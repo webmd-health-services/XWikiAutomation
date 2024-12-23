@@ -66,7 +66,8 @@ function Invoke-XWRestMethod
     Set-StrictMode -Version 'Latest'
     Use-CallerPreference -Cmdlet $PSCmdlet -SessionState $ExecutionContext.SessionState
 
-    $url = [uri]::EscapeUriString("$($Session.Url)rest/${name}")
+    $url = [uri]::EscapeUriString("$($Session.Url)xwiki/rest/${name}")
+
     if ($AsJson)
     {
         $url = "${url}?media=json"
